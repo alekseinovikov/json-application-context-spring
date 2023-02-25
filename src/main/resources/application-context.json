@@ -1,0 +1,11 @@
+[
+  {
+    "name": "myBean",
+    "className": "me.alekseinovikov.MyBean"
+  },
+  {
+    "name": "mySecondBean",
+    "className": "me.alekseinovikov.MySecondBean",
+    "initMethod": "init"
+  }
+]
