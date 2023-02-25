@@ -7,8 +7,6 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.List;
 
 public class ClasspathJsonApplicationContext extends AbstractRefreshableConfigApplicationContext {
 
@@ -25,10 +23,6 @@ public class ClasspathJsonApplicationContext extends AbstractRefreshableConfigAp
     @Override
     protected void loadBeanDefinitions(DefaultListableBeanFactory beanFactory) throws BeansException, IOException {
         final JsonBeanDefinitionReader jsonBeanDefinitionReader = new JsonBeanDefinitionReader(beanFactory);
-
-        jsonBeanDefinitionReader.setEnvironment(this.getEnvironment());
-        jsonBeanDefinitionReader.setResourceLoader(this);
-
         jsonBeanDefinitionReader.loadBeanDefinitions(configResource);
     }
 
