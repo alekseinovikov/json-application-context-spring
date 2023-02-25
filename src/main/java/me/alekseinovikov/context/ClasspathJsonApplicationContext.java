@@ -1,6 +1,7 @@
 package me.alekseinovikov.context;
 
 import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.support.BeanDefinitionReader;
 import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 import org.springframework.context.support.AbstractRefreshableConfigApplicationContext;
 import org.springframework.core.io.ClassPathResource;
@@ -13,8 +14,6 @@ public class ClasspathJsonApplicationContext extends AbstractRefreshableConfigAp
     private final Resource configResource;
 
     public ClasspathJsonApplicationContext(final String jsonFilePath) {
-        setConfigLocation(jsonFilePath);
-
         configResource = new ClassPathResource(jsonFilePath);
         refresh();
         start();
@@ -22,7 +21,7 @@ public class ClasspathJsonApplicationContext extends AbstractRefreshableConfigAp
 
     @Override
     protected void loadBeanDefinitions(DefaultListableBeanFactory beanFactory) throws BeansException, IOException {
-        final JsonBeanDefinitionReader jsonBeanDefinitionReader = new JsonBeanDefinitionReader(beanFactory);
+        final BeanDefinitionReader jsonBeanDefinitionReader = new JsonBeanDefinitionReader(beanFactory);
         jsonBeanDefinitionReader.loadBeanDefinitions(configResource);
     }
 
