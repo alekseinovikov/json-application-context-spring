@@ -3,7 +3,6 @@ package me.alekseinovikov.context;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.type.CollectionType;
-import lombok.SneakyThrows;
 import org.springframework.beans.factory.BeanDefinitionStoreException;
 import org.springframework.beans.factory.config.BeanDefinitionHolder;
 import org.springframework.beans.factory.support.AbstractBeanDefinition;
@@ -28,18 +27,21 @@ public class JsonBeanDefinitionReader extends AbstractBeanDefinitionReader {
         jsonBeanDescriptionClass = objectMapper.getTypeFactory().constructCollectionType(List.class, JsonBeanDescription.class);
     }
 
-    @SneakyThrows
     @Override
     public int loadBeanDefinitions(Resource resource) throws BeanDefinitionStoreException {
-        final String contentAsString = resource.getContentAsString(StandardCharsets.UTF_8);
-        final List<JsonBeanDescription> jsonDescriptions = objectMapper.readValue(contentAsString, jsonBeanDescriptionClass);
+        try {
+            final String contentAsString = resource.getContentAsString(StandardCharsets.UTF_8);
+            final List<JsonBeanDescription> jsonDescriptions = objectMapper.readValue(contentAsString, jsonBeanDescriptionClass);
 
-        for (JsonBeanDescription jsonDescription : jsonDescriptions) {
-            BeanDefinitionHolder beanDefinitionHolder = createBeanDefinition(jsonDescription);
-            getRegistry().registerBeanDefinition(jsonDescription.getName(), beanDefinitionHolder.getBeanDefinition());
+            for (JsonBeanDescription jsonDescription : jsonDescriptions) {
+                BeanDefinitionHolder beanDefinitionHolder = createBeanDefinition(jsonDescription);
+                getRegistry().registerBeanDefinition(jsonDescription.getName(), beanDefinitionHolder.getBeanDefinition());
+            }
+
+            return jsonDescriptions.size();
+        } catch (Exception ex) {
+            throw new RuntimeException(ex);
         }
-
-        return jsonDescriptions.size();
     }
 
     private BeanDefinitionHolder createBeanDefinition(JsonBeanDescription description) throws ClassNotFoundException {
