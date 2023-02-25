@@ -36,7 +36,7 @@ public class JsonBeanDefinitionReader extends AbstractBeanDefinitionReader {
 
         for (JsonBeanDescription jsonDescription : jsonDescriptions) {
             BeanDefinitionHolder beanDefinitionHolder = createBeanDefinition(jsonDescription);
-            BeanDefinitionReaderUtils.registerBeanDefinition(beanDefinitionHolder, getRegistry());
+            getRegistry().registerBeanDefinition(jsonDescription.getName(), beanDefinitionHolder.getBeanDefinition());
         }
 
         return jsonDescriptions.size();
